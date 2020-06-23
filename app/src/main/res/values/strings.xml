@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Smart Parking Solutions</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="create_new_account"><u>Create new Account>></u></string>
+    <string name="forgot_password"><u>Forgot Password?</u></string>
+    <string name="or_login_with">Or Login with</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login_to_existing_account"><u><![CDATA[<<Login to Existing Account]]></u></string>
+    <string name="name">Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="or_sign_up_with">Or Sign Up with</string>
+    <string name="forgot_password2">Forgot Password</string>
+    <string name="send_email">Send Email</string>
+    <string name="logout">Logout</string>
+</resources>
