@@ -5,27 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <TextView
-        android:layout_width="wrap_content"
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_container"
+        android:layout_above="@id/bottom">
+
+    </FrameLayout>
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/email_textView"
-        android:text="@string/email"
-        android:textSize="21sp"
-        android:layout_centerInParent="true"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/logout_btn"
-        android:layout_marginTop="25dp"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textColor="@android:color/white"
-        android:text="@string/logout"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/email_textView"
-        android:textSize="22sp"
-        android:textAllCaps="false"
-        android:background="@drawable/button_background"/>
+        android:id="@+id/bottom"
+        android:layout_alignParentBottom="true">
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom_navigation"
+            app:itemIconTint="@color/selector"
+            app:labelVisibilityMode="unlabeled"
+            android:background="@color/colorPrimary"
+            app:menu="@menu/bottom_nav"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
 
 
