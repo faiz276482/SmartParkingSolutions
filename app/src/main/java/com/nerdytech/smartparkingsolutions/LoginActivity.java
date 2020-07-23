@@ -74,10 +74,6 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         forgot_pass=findViewById(R.id.forgot_password);
         visiblity=findViewById(R.id.visiblity);
 
-
-
-
-
         mAuth=FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
 
@@ -222,9 +218,18 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                     boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
                     Log.d("MyTAG", "onComplete: " + (isNew ? "new user" : "old user"));
 
-                    startActivity(new Intent(getApplicationContext(),MainActivity.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                    finish();
+                    if(isNew)
+                    {
+                        startActivity(new Intent(getApplicationContext(), SaveUserDataActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        finish();
+                    }
+                    else {
+
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class)
+                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        finish();
+                    }
                 }
                 else{
                     Toast.makeText(getApplicationContext(),"Auth Error",Toast.LENGTH_SHORT).show();
