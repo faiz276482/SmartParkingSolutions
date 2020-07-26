@@ -8,7 +8,6 @@
     <string name="or_login_with">Or Login with</string>
     <string name="sign_up">Sign Up</string>
     <string name="login_to_existing_account"><u><![CDATA[<<Login to Existing Account]]></u></string>
-    <string name="name">Name</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="or_sign_up_with">Or Sign Up with</string>
     <string name="forgot_password2">Forgot Password</string>
@@ -28,4 +27,8 @@
     <string name="save_user_data">Save User Data</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="date_of_birth">Date Of Birth</string>
+    <string name="name">Name</string>
+    <string name="availabe_balance">Availabe Balance</string>
+    <string name="rs">Rs.</string>
+    <string name="add_money">Add Money</string>
 </resources>

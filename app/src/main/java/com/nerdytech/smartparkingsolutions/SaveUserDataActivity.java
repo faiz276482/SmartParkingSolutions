@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nerdytech.smartparkingsolutions.model.User;
+import com.nerdytech.smartparkingsolutions.model.Wallet;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -123,6 +124,9 @@ public class SaveUserDataActivity extends AppCompatActivity {
                             Toast.makeText(SaveUserDataActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
                         }
                     });
+
+                    FirebaseFirestore.getInstance().collection("Wallet").document(mUser.getUid())
+                            .set(new Wallet(0));
                 }
 
             }

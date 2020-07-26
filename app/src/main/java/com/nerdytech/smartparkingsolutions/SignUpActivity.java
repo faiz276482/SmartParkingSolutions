@@ -3,6 +3,7 @@ package com.nerdytech.smartparkingsolutions;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,6 +35,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nerdytech.smartparkingsolutions.model.User;
+import com.nerdytech.smartparkingsolutions.model.Wallet;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,6 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
     TextView login_existing;
     FirebaseAuth mAuth;
     FirebaseUser mUser;
+    ProgressDialog progressDialog;
 
     ImageButton visiblity2,visibility3;
     boolean isVisible2=false,isVisible3=false;
@@ -69,6 +72,9 @@ public class SignUpActivity extends AppCompatActivity {
         signup_btn=findViewById(R.id.signup_btn);
         visiblity2=findViewById(R.id.visiblity2);
         visibility3=findViewById(R.id.visiblity3);
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setTitle("Creating Account");
+        progressDialog.setTitle("Please Wait");
 
         mAuth=FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
@@ -124,6 +130,7 @@ public class SignUpActivity extends AppCompatActivity {
         signup_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog.show();
                 final String uEmail=email.getText().toString();
                 String uPass=password.getText().toString();
                 final String uConfirmPass=confirm_password.getText().toString();
@@ -150,10 +157,13 @@ public class SignUpActivity extends AppCompatActivity {
                     flag=false;
                 }
 
+
                 if(flag){
                     mAuth.createUserWithEmailAndPassword(uEmail,uPass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
+                            progressDialog.dismiss();
+                            mUser=mAuth.getCurrentUser();
                             User user=new User(uName,uEmail,mUser.getUid(),"","dd/mm/yy","default");
                             DocumentReference docRef= FirebaseFirestore.getInstance().collection("Users").document(mUser.getUid());
                             docRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -174,14 +184,20 @@ public class SignUpActivity extends AppCompatActivity {
                                     Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
+                            FirebaseFirestore.getInstance().collection("Wallet").document(mUser.getUid())
+                                    .set(new Wallet(0));
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(SignUpActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     });
+                }
+                else{
+                    progressDialog.dismiss();
                 }
 
             }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -60,6 +61,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
 
     FirebaseAuth mAuth;
     FirebaseUser mUser;
+    ProgressDialog progressDialog;
 
 
     @Override
@@ -73,6 +75,10 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         create_new=findViewById(R.id.create_new);
         forgot_pass=findViewById(R.id.forgot_password);
         visiblity=findViewById(R.id.visiblity);
+
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setTitle("Logging in");
+        progressDialog.setMessage("Please wait!");
 
         mAuth=FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
@@ -115,15 +121,18 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog.show();
                 String emailId=email.getText().toString();
                 String pass=password.getText().toString();
 
                 if(TextUtils.isEmpty(email.getText()) || !validateEmailAddress(emailId) ){
                     Toast.makeText(LoginActivity.this, "Enter Proper Email!", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 if(TextUtils.isEmpty(password.getText()))
                 {
                     Toast.makeText(LoginActivity.this,"Enter password!",Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
                 else {
 
@@ -133,12 +142,14 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                             Toast.makeText(LoginActivity.this, "Login Successfull!", Toast.LENGTH_SHORT).show();
                             mUser=mAuth.getCurrentUser();
                             if(mUser.isEmailVerified()) {
+                                progressDialog.dismiss();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 finish();
                             }
                             else {
+                                progressDialog.dismiss();
                                 mUser.sendEmailVerification();
                                 mAuth.signOut();
                                 Toast.makeText(LoginActivity.this, "Email not verified\nPlease Verify your Email!", Toast.LENGTH_SHORT).show();
@@ -148,6 +159,7 @@ public class LoginActivity extends BaseActivity implements GoogleApiClient.OnCon
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(LoginActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
                     });
                 }

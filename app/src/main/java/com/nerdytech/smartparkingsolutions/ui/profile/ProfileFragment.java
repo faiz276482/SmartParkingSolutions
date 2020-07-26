@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.nerdytech.smartparkingsolutions.LoginActivity;
 import com.nerdytech.smartparkingsolutions.R;
+import com.nerdytech.smartparkingsolutions.model.User;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ProfileFragment extends Fragment {
@@ -30,6 +40,8 @@ public class ProfileFragment extends Fragment {
     Toolbar toolbar;
 
     TextView emailId;
+    TextView name,email,dob,mobile;
+    CircleImageView profile_image;
     Button logout;
     FirebaseAuth mAuth;
     FirebaseUser mUser;
@@ -43,6 +55,12 @@ public class ProfileFragment extends Fragment {
         mAuth=FirebaseAuth.getInstance();
         mUser=mAuth.getCurrentUser();
         emailId=view.findViewById(R.id.email_textView);
+
+        email=view.findViewById(R.id.email);
+        name=view.findViewById(R.id.name);
+        mobile=view.findViewById(R.id.mobile);
+        dob=view.findViewById(R.id.dob);
+        profile_image=view.findViewById(R.id.profile_image);
         logout=view.findViewById(R.id.logout_btn);
         toolbar=view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -51,6 +69,33 @@ public class ProfileFragment extends Fragment {
         try{
             if(mUser!=null) {//Checking if user is actually present
                 emailId.setText(mUser.getEmail());
+                DocumentReference docRef= FirebaseFirestore.getInstance().collection("Users").document(mUser.getUid());
+                docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if(error!=null)
+                        {
+                            return;
+                        }
+                        if (value.exists())
+                        {
+                            User user=value.toObject(User.class);
+                            name.setText(user.getName());
+                            email.setText(user.getEmail());
+                            mobile.setText(user.getMobile());
+                            dob.setText(user.getDob());
+
+                            if(user.getProfile_pic().equals("default")){
+                                profile_image.setImageResource(R.drawable.profile);
+                            }
+                            else{
+                                Picasso.get().load(user.getProfile_pic()).into(profile_image);
+                            }
+
+                        }
+                    }
+                });
+
             }
         }
         catch (Exception e)
@@ -63,14 +108,21 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 mAuth.signOut();
                 // Configure Google Sign In
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-                // [END config_signin]
 
-                mGoogleSignInClient = GoogleSignIn.getClient(view.getContext(), gso);
-                mGoogleSignInClient.signOut();
+                try {
+                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken(getString(R.string.default_web_client_id))
+                            .requestEmail()
+                            .build();
+                    // [END config_signin]
+
+                    mGoogleSignInClient = GoogleSignIn.getClient(view.getContext(), gso);
+                    mGoogleSignInClient.signOut();
+                }
+                catch (Exception e)
+                {
+                    Log.i("Logout",e.getMessage());
+                }
                 Intent intent=new Intent(getContext(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);

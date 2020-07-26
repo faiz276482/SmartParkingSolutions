@@ -7,4 +7,46 @@
 
     <include layout="@layout/appbar"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@drawable/relative_background"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="80dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/availabe_balance"
+                android:textSize="25sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:layout_marginStart="10dp"
+                android:textColor="@android:color/holo_green_dark"
+                android:text="@string/rs"
+                android:id="@+id/amount"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_money"
+        android:id="@+id/add_money"
+        android:background="@drawable/button_background"
+        android:padding="10dp"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>
